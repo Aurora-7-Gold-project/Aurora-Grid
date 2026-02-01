@@ -2,7 +2,7 @@
 import streamlit as st
 
 # 1. SETUP PAGINA AURORA 7 GOLD
-st.set_page_config(page_title="AURORA 7 GOLD - FULL OS", layout="wide")
+  st.set_page_config(page_title="AURORA 7 GOLD - FULL OS", layout="wide")
 
 # STILE CSS PER ARCHITETTURA A 7 QUADRANTI
   st.markdown("""
