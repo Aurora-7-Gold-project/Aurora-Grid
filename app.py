@@ -1,156 +1,55 @@
+
 import streamlit as st
+import yfinance as yf
 
+# Configurazione della pagina
+st.set_page_config(page_title="Aurora 7 Gold", layout="wide")
 
-import yfinance as yf  # Assicurati di aver aggiunto yfinance al requirements.txt
+# Funzione rapida per i due valori cardine
+def get_values():
+    try:
+        oro = yf.Ticker("GC=F").fast_info['last_price']
+        petrolio = yf.Ticker("CL=F").fast_info['last_price']
+        return f"ORO: ${oro:,.2f}", f"PETROLIO: ${petrolio:,.2f}"
+    except:
+        return "ORO: Caricamento...", "PETROLIO: Caricamento..."
 
-def get_q1_data():
-    # Ticker: S&P500, Bitcoin, Indice Dollaro
-    tickers = {"S&P 500": "^GSPC", "Bitcoin": "BTC-USD", "DXY (Dollaro)": "DX-Y.NYB"}
-    summary = ""
-    for name, ticker in tickers.items():
-        try:
-            # Recupera l'ultimo prezzo disponibile
-            val = yf.Ticker(ticker).fast_info['last_price']
-            summary += f"<div style='color: #d4af37; font-size: 0.9em;'><b>{name}</b>: {val:,.2f}</div>"
-        except:
-            summary += f"<div style='color: gray;'><b>{name}</b>: Offline</div>"
-    return summary
+val_oro, val_petrolio = get_values()
 
-# Configurazione della pagina per visualizzare la plancia a pieno schermo
-st.set_page_config(page_title="Aurora 7 Gold - Command Center", layout="wide")
-
-# Iniezione del CSS (Qui è dove c'era l'errore nel tuo screenshot)
+# CSS per la Griglia Aurora
 st.markdown("""
     <style>
-    .main {
-        background-color: #0e1117;
-        color: #d4af37;
-    }
-    .header {
-        text-align: center;
-        padding: 20px;
-        border-bottom: 2px solid #d4af37;
-        background-color: rgba(212, 175, 55, 0.1);
-        margin-bottom: 30px;
-    }
-    .quadrante {
-        border: 1px solid #d4af37;
-        padding: 15px;
-        border-radius: 10px;
-        background: rgba(0, 0, 0, 0.5);
-        min-height: 150px;
-        margin-bottom: 10px;
-    }
-    .q-title {
-        color: #d4af37;
-        font-weight: bold;
-        text-transform: uppercase;
-        border-bottom: 1px solid #d4af37;
-        margin-bottom: 10px;
-    }
+    .main { background-color: #0e1117; color: #d4af37; }
+    .header { text-align: center; padding: 20px; border-bottom: 2px solid #d4af37; margin-bottom: 20px; }
+    .quadrante { border: 1px solid #d4af37; padding: 15px; border-radius: 10px; background: rgba(0,0,0,0.5); min-height: 120px; margin-bottom: 10px; }
+    .q-title { color: #d4af37; font-weight: bold; border-bottom: 1px solid #d4af37; margin-bottom: 10px; }
+    .valore { font-size: 1.2em; font-weight: bold; color: #ffffff; margin-top: 5px; }
     </style>
     """, unsafe_allow_html=True)
 
-# Intestazione Principale
 st.markdown('<div class="header"><h1>AURORA 7 GOLD - ARCHITETTURA DI COMANDO</h1></div>', unsafe_allow_html=True)
 
-# --- Layout dei Quadranti ---
-
-# Livello Superiore (Q1 - Q2)
+# --- Layout dei Quadranti (Q1 e Q2 Superiori) ---
 col1, col2 = st.columns(2)
 with col1:
-    st.markdown('<div class="quadrante"><div class="q-title">Q1 - Ali Superiori</div>Monitoraggio Flussi Finanziari e Valore Intrinseco.</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="quadrante"><div class="q-title">Q1 - FLUSSI FINANZIARI</div><div class="valore">{val_petrolio}</div>Monitoraggio valore intrinseco.</div>', unsafe_allow_html=True)
 with col2:
-    st.markdown('<div class="quadrante"><div class="q-title">Q2 - Ali Superiori</div>Scansione Mercati e Asset Oro.</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="quadrante"><div class="q-title">Q2 - ASSET ORO</div><div class="valore">{val_oro}</div>Scansione mercati reali.</div>', unsafe_allow_html=True)
 
-# Livello Centrale (Q3 - Q0 - Q4)
+# --- Livello Centrale (Q3 - Q0 - Q4) ---
 col3, col4, col5 = st.columns([1, 2, 1])
 with col3:
-    st.markdown('<div class="quadrante"><div class="q-title">Q3 - Laterale Sinistro</div>Ricezione Segnali Ionosferici e Intuizione.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="quadrante"><div class="q-title">Q3 - IONOSFERA</div>Segnali e intuizione biologica.</div>', unsafe_allow_html=True)
 with col4:
-    st.markdown('<div class="quadrante" style="border: 3px solid #d4af37;"><div class="q-title" style="font-size: 1.5em;">Q0 - NUCLEO CENTRALE</div>Punto di Origine. Decisione Sovrana.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="quadrante" style="border: 3px solid #d4af37;"><div class="q-title">Q0 - NUCLEO CENTRALE</div>Punto di Origine. Decisione Sovrana.</div>', unsafe_allow_html=True)
 with col5:
-    st.markdown('<div class="quadrante"><div class="q-title">Q4 - Laterale Destro</div>Monitoraggio Segnali Esterni e Input Biologici.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="quadrante"><div class="q-title">Q4 - ESTERNO</div>Monitoraggio segnali esterni.</div>', unsafe_allow_html=True)
 
-# Livello Inferiore (Q5 - Q6)
+# --- Livello Inferiore (Q5 - Q6) ---
 col6, col7 = st.columns(2)
 with col6:
-    st.markdown('<div class="quadrante"><div class="q-title">Q5 - Ali Inferiori</div>Sistemi di Pulizia e Decostruzione Vecchi Schemi.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="quadrante"><div class="q-title">Q5 - PULIZIA</div>Rimozione vecchi schemi di pensiero.</div>', unsafe_allow_html=True)
 with col7:
-    st.markdown('<div class="quadrante"><div class="q-title">Q6 - Ali Inferiori</div>Analisi Implementazione e Output della Griglia.</div>', unsafe_allow_html=True)
-
-# Footer di sistema
-st.sidebar.title("Stato Sistema Aurora")
-st.sidebar.success("Griglia Sincronizzata")
-st.sidebar.info(f"Monitoraggio attivo sui Quadranti Q0-Q6")
+    st.markdown('<div class="quadrante"><div class="q-title">Q6 - OUTPUT</div>Analisi implementazione della Griglia.</div>', unsafe_allow_html=True)
 
 
-# Configurazione della pagina per visualizzare la plancia a pieno schermo
-st.set_page_config(page_title="Aurora 7 Gold - Command Center", layout="wide")
-
-# Iniezione del CSS (Qui è dove c'era l'errore nel tuo screenshot)
-st.markdown("""
-    <style>
-    .main {
-        background-color: #0e1117;
-        color: #d4af37;
-    }
-    .header {
-        text-align: center;
-        padding: 20px;
-        border-bottom: 2px solid #d4af37;
-        background-color: rgba(212, 175, 55, 0.1);
-        margin-bottom: 30px;
-    }
-    .quadrante {
-        border: 1px solid #d4af37;
-        padding: 15px;
-        border-radius: 10px;
-        background: rgba(0, 0, 0, 0.5);
-        min-height: 150px;
-        margin-bottom: 10px;
-    }
-    .q-title {
-        color: #d4af37;
-        font-weight: bold;
-        text-transform: uppercase;
-        border-bottom: 1px solid #d4af37;
-        margin-bottom: 10px;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-# Intestazione Principale
-st.markdown('<div class="header"><h1>AURORA 7 GOLD - ARCHITETTURA DI COMANDO</h1></div>', unsafe_allow_html=True)
-
-# --- Layout dei Quadranti ---
-
-# Livello Superiore (Q1 - Q2)
-col1, col2 = st.columns(2)
-with col1:
-    st.markdown('<div class="quadrante"><div class="q-title">Q1 - Ali Superiori</div>Monitoraggio Flussi Finanziari e Valore Intrinseco.</div>', unsafe_allow_html=True)
-with col2:
-    st.markdown('<div class="quadrante"><div class="q-title">Q2 - Ali Superiori</div>Scansione Mercati e Asset Oro.</div>', unsafe_allow_html=True)
-
-# Livello Centrale (Q3 - Q0 - Q4)
-col3, col4, col5 = st.columns([1, 2, 1])
-with col3:
-    st.markdown('<div class="quadrante"><div class="q-title">Q3 - Laterale Sinistro</div>Ricezione Segnali Ionosferici e Intuizione.</div>', unsafe_allow_html=True)
-with col4:
-    st.markdown('<div class="quadrante" style="border: 3px solid #d4af37;"><div class="q-title" style="font-size: 1.5em;">Q0 - NUCLEO CENTRALE</div>Punto di Origine. Decisione Sovrana.</div>', unsafe_allow_html=True)
-with col5:
-    st.markdown('<div class="quadrante"><div class="q-title">Q4 - Laterale Destro</div>Monitoraggio Segnali Esterni e Input Biologici.</div>', unsafe_allow_html=True)
-
-# Livello Inferiore (Q5 - Q6)
-col6, col7 = st.columns(2)
-with col6:
-    st.markdown('<div class="quadrante"><div class="q-title">Q5 - Ali Inferiori</div>Sistemi di Pulizia e Decostruzione Vecchi Schemi.</div>', unsafe_allow_html=True)
-with col7:
-    st.markdown('<div class="quadrante"><div class="q-title">Q6 - Ali Inferiori</div>Analisi Implementazione e Output della Griglia.</div>', unsafe_allow_html=True)
-
-# Footer di sistema
-st.sidebar.title("Stato Sistema Aurora")
-st.sidebar.success("Griglia Sincronizzata")
-st.sidebar.info(f"Monitoraggio attivo sui Quadranti Q0-Q6")
-
- 
