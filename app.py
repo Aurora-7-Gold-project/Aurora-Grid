@@ -14,7 +14,7 @@ st.markdown("""
     .news-box { font-size: 0.75em; color: #aaa; margin-top: 10px; border-top: 0.5px solid #444; padding-top: 5px; }
     .sentiment-label { font-size: 0.75em; font-weight: bold; margin-bottom: 10px; display: block; }
     </style>
-    """, unsafe_allow_index=True)
+    """, unsafe_allow_html=True)
 
 # --- Q0: NUCLEO DI VALIDAZIONE BIOLOGICA (Sempre al Top) ---
 st.markdown('<div class="nucleo-q0"><h1>🎯 Q0: NUCLEO DI VALIDAZIONE BIOLOGICA</h1><h3>STATO: CALMA PIATTA | SINCRONIZZAZIONE: 5/10</h3></div>', unsafe_allow_index=True)
