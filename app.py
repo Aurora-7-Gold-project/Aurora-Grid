@@ -1,93 +1,142 @@
 
 import streamlit as st
+
 import yfinance as yf
 
-# Configurazione della pagina
-st.set_page_config(page_title="Aurora 7 Gold", layout="wide")
+import datetime
 
-# Recupero dati mercati
-def get_market_data():
+
+# --- 1. MOTORE DI RECUPERO DATI (Esecutore Copilot) ---
+
+def get_market_data(ticker_symbol):
+
     try:
-        petrolio = yf.Ticker("CL=F").fast_info['last_price']
-        oro = yf.Ticker("GC=F").fast_info['last_price']
-        sp500 = yf.Ticker("^GSPC").fast_info['last_price']
-        return f"${petrolio:,.2f}", f"${oro:,.2f}", f"{sp500:,.2f}"
+
+        ticker = yf.Ticker(ticker_symbol)
+
+        data = ticker.history(period="2d")
+
+        if len(data) < 2: return 0.0, 0.0
+
+        last_close = data["Close"].iloc[-2]
+
+        current_price = data["Close"].iloc[-1]
+
+        pct_change = ((current_price - last_close) / last_close) * 100
+
+        return current_price, pct_change
+
     except:
-        return "Attendere...", "Attendere...", "Attendere..."
 
-val_petrolio, val_oro, val_sp = get_market_data()
+        return 0.0, 0.0
 
-# CSS per garantire la visibilità di tutti gli elementi
-st.markdown("""
-    <style>
-    .main { background-color: #0e1117; color: #d4af37; }
-    .quadrante { 
-        border: 2px solid #d4af37; 
-        padding: 20px; 
-        border-radius: 10px; 
-        background: rgba(0,0,0,0.8); 
-        color: #d4af37;
-        margin-bottom: 20px;
-        min-height: 220px;
-    }
-    .q-title { font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #d4af37; margin-bottom: 15px; }
-    .q-val { font-size: 2em; color: white; font-weight: bold; }
-    h1 { text-align: center; color: #d4af37; }
-    /* Forza il colore del testo nelle aree di input */
-    .stTextArea textarea, .stTextInput input { color: #d4af37 !important; background-color: #1a1a1a !important; }
-    </style>
-    """, unsafe_allow_html=True)
 
-st.title("AURORA 7 GOLD - PLANCIA INTEGRALE")
+# --- 2. CONFIGURAZIONE INTERFACCIA ---
 
-# --- BARRA DI VIGILANZA MANUALE (POSIZIONE CENTRALE) ---
-st.markdown("### LIVELLO DI VIGILANZA MANUALE")
-vigilanza = st.select_slider(
-    "Sposta la barra per indicare il tuo stato:",
-    options=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-    value=5
-)
+st.set_page_config(page_title="Aurora 7 Gold Grid", layout="wide")
 
-if vigilanza <= 3:
-    st.error(f"LIVELLO {vigilanza}: Stanco e poco vigile")
-elif 4 <= vigilanza <= 6:
-    st.warning(f"LIVELLO {vigilanza}: Equilibrato")
-else:
-    st.success(f"LIVELLO {vigilanza}: SUPER EQUILIBRATO")
+st.markdown("<h1 style='text-align: center;'>🛡️ GRIGLIA OPERATIVA AURORA 7 GOLD</h1>", unsafe_allow_html=True)
 
-st.markdown("---")
 
-# --- PRIMA RIGA: Q1 - Q0 - Q2 ---
-c1, c2, c3 = st.columns(3)
-with c1:
-    st.markdown(f'<div class="quadrante"><div class="q-title">Q1 - Petrolio</div><div class="q-val">{val_petrolio}</div>Flussi Energia</div>', unsafe_allow_html=True)
-with c2:
-    st.markdown('<div class="quadrante" style="border: 4px solid #d4af37;"><div class="q-title">Q0 - NUCLEO</div><div class="q-val">SOVRANO</div>Centro di Comando</div>', unsafe_allow_html=True)
-with c3:
-    st.markdown(f'<div class="quadrante"><div class="q-title">Q2 - Oro</div><div class="q-val">{val_oro}</div>Valore Intrinseco</div>', unsafe_allow_html=True)
+# Recupero dati in tempo reale
 
-# --- SECONDA RIGA: Q3 - Q4 ---
-c4, c5 = st.columns(2)
-with c4:
-    st.markdown(f'<div class="quadrante"><div class="q-title">Q3 - S&P 500</div><div class="q-val">{val_sp}</div>Mercato Globale</div>', unsafe_allow_html=True)
-with c5:
-    st.markdown('<div class="quadrante"><div class="q-title">Q4 - Ionosfera (Interattivo)</div>', unsafe_allow_html=True)
-    st.text_area("Digita qui le tue intuizioni:", key="area_q4", height=100)
-    st.markdown('</div>', unsafe_allow_html=True)
+p_oro, v_oro = get_market_data("GC=F")
 
-# --- TERZA RIGA: Q5 - Q6 ---
-c6, c7 = st.columns(2)
-with c6:
-    st.markdown('<div class="quadrante"><div class="q-title">Q5 - Pulizia (Manuale)</div>', unsafe_allow_html=True)
-    st.checkbox("Rimuovi schemi obsoleti", key="p1")
-    st.checkbox("Decostruzione interferenze", key="p2")
-    st.checkbox("Sincronizzazione attiva", key="p3")
-    st.markdown('</div>', unsafe_allow_html=True)
-with c7:
-    st.markdown('<div class="quadrante"><div class="q-title">Q6 - Output Finale</div>', unsafe_allow_html=True)
-    if st.button("ESEGUI DIAGNOSTICA"):
-        st.write(f"Stato Vigilanza: {vigilanza}/10")
-        st.write("Sincronizzazione Griglia: OTTIMALE")
-    st.markdown('</div>', unsafe_allow_html=True)
+p_oil, v_oil = get_market_data("CL=F")
+
+p_sp500, v_sp500 = get_market_data("^GSPC")
+
+
+# --- 3. ARCHITETTURA A 7 QUADRANTI ---
+
+
+# RIGA SUPERIORE (Asset Strategici)
+
+col1, col2, col3 = st.columns(3)
+
+
+with col1:
+
+    st.subheader("Q1: Asset Rifugio (Oro)")
+
+    st.metric(label="Gold Price", value=f"{p_oro:.2f}", delta=f"{v_oro:.2f}%")
+
+    if v_oro <= -10.0:
+
+        st.error("🚨 ALLERTA: Liquidazione Forzata!")
+
+
+with col2:
+
+    st.subheader("Q2: Energia (Petrolio)")
+
+    st.metric(label="Crude Oil", value=f"{p_oil:.2f}", delta=f"{v_oil:.2f}%")
+
+    if v_oil <= -5.0:
+
+        st.warning("⚠️ Shock Tecnico Rilevato")
+
+
+with col3:
+
+    st.subheader("Q3: Mercato USA (S&P 500)")
+
+    st.metric(label="S&P 500 Index", value=f"{p_sp500:.2f}", delta=f"{v_sp500:.2f}%")
+
+
+st.divider()
+
+
+# RIGA CENTRALE (Nucleo Biologico)
+
+# Questo è il quadrante Q0: Il punto di contatto con la tua intuizione
+
+col_center = st.columns([1, 2, 1])
+
+with col_center[1]:
+
+    st.markdown("<div style='border: 2px solid gold; padding: 20px; border-radius: 10px; text-align: center;'>"
+
+                "<h3>🎯 Q0: NUCLEO DI VALIDAZIONE BIOLOGICA</h3>"
+
+                f"<p>Stato Sistema: <b>CALMA PIATTA</b></p>"
+
+                "</div>", unsafe_allow_html=True)
+
+    livello_intuizione = st.slider("Sincronizzazione Intuizione (0-10)", 0, 10, 5)
+
+
+st.divider()
+
+
+# RIGA INFERIORE (Monitoraggio Geopolitico e Filtri)
+
+col4, col5, col6 = st.columns(3)
+
+
+with col4:
+
+    st.subheader("Q4: Geopolitica")
+
+    st.info("Focus: Operazioni chirurgiche Iran\nMonitoraggio news Trump")
+
+
+with col5:
+
+    st.subheader("Q5: Filtro Rumore")
+
+    st.success("Operativo: Segnale Pulito\nNessuna interferenza rilevata")
+
+
+with col6:
+
+    st.subheader("Q6: La Commercialista")
+
+    st.write(f"Ultimo aggiornamento: {datetime.datetime.now().strftime('%H:%M:%S')}")
+
+    st.write("Target stabilità: Validato")
+
+
+
 
 Inviato da Outlook per Android
