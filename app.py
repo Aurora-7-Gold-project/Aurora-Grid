@@ -1,76 +1,72 @@
+
 import streamlit as st
-import yfinance as yf
-import datetime
 
-# --- 1. MOTORE DI RECUPERO DATI (Esecutore Copilot) ---
-def get_market_data(ticker_symbol):
-    try:
-        ticker = yf.Ticker(ticker_symbol)
-        data = ticker.history(period="2d")
-        if len(data) < 2: return 0.0, 0.0
-        last_close = data["Close"].iloc[-2]
-        current_price = data["Close"].iloc[-1]
-        pct_change = ((current_price - last_close) / last_close) * 100
-        return current_price, pct_change
-    except:
-        return 0.0, 0.0
+# 1. SETUP PAGINA AURORA 7 GOLD
+st.set_page_config(page_title="AURORA 7 GOLD - FULL OS", layout="wide")
 
-# --- 2. CONFIGURAZIONE INTERFACCIA ---
-st.set_page_config(page_title="Aurora 7 Gold Grid", layout="wide")
-st.markdown("<h1 style='text-align: center;'>🛡️ GRIGLIA OPERATIVA AURORA 7 GOLD</h1>", unsafe_allow_html=True)
+# STILE CSS PER ARCHITETTURA A 7 QUADRANTI
+st.markdown("""
+    <style>
+    .stApp { background-color: #050505; color: #d4af37; font-family: 'Inter', sans-serif; }
+    .nucleo-q0 { border: 3px solid #ff4500; padding: 25px; text-align: center; border-radius: 15px; margin-bottom: 20px; background: rgba(255, 69, 0, 0.05); }
+    .quadrante { border: 1px solid #d4af37; padding: 15px; border-radius: 8px; background: #111; min-height: 350px; margin-bottom: 15px; }
+    .ticker { color: #ffffff; font-weight: bold; font-size: 0.85em; display: block; margin-bottom: 2px; }
+    .news-box { font-size: 0.75em; color: #aaa; margin-top: 10px; border-top: 0.5px solid #444; padding-top: 5px; }
+    .sentiment-label { font-size: 0.75em; font-weight: bold; margin-bottom: 10px; display: block; }
+    </style>
+    """, unsafe_allow_index=True)
 
-# Recupero dati in tempo reale
-p_oro, v_oro = get_market_data("GC=F")
-p_oil, v_oil = get_market_data("CL=F")
-p_sp500, v_sp500 = get_market_data("^GSPC")
+# --- Q0: NUCLEO DI VALIDAZIONE BIOLOGICA (Sempre al Top) ---
+st.markdown('<div class="nucleo-q0"><h1>🎯 Q0: NUCLEO DI VALIDAZIONE BIOLOGICA</h1><h3>STATO: CALMA PIATTA | SINCRONIZZAZIONE: 5/10</h3></div>', unsafe_allow_index=True)
 
-# --- 3. ARCHITETTURA A 7 QUADRANTI ---
+# CREAZIONE GRIGLIA OPERATIVA
+riga1_col1, riga1_col2, riga1_col3 = st.columns(3)
+riga2_col1, riga2_col2, riga2_col3 = st.columns(3)
 
-# RIGA SUPERIORE (Asset Strategici)
-col1, col2, col3 = st.columns(3)
+# --- RIGA 1 (Analisi di Sistema) ---
+with riga1_col1:
+    st.markdown('<div class="quadrante"><h3>Q1: IONOSFERICA</h3><p class="ticker">Segnali Esterni</p><p class="ticker">Intuizione Biologica</p><div class="news-box">Monitoraggio risonanza e flussi energetici globali.</div></div>', unsafe_allow_index=True)
 
-with col1:
-    st.subheader("Q1: Asset Rifugio (Oro)")
-    st.metric(label="Gold Price", value=f"{p_oro:.2f}", delta=f"{v_oro:.2f}%")
-    if v_oro <= -10.0:
-        st.error("🚨 ALLERTA: Liquidazione Forzata!")
+with riga1_col2:
+    st.markdown('<div class="quadrante"><h3>Q2: ASSET RIFUGIO</h3><p class="ticker">ORO (Gold)</p><p class="ticker">ARGENTO (Silver)</p><p class="ticker">BRENT CRUDE OIL</p><div class="news-box">Brent stabile a $61.40. Focus su materie prime energetiche.</div></div>', unsafe_allow_index=True)
 
-with col2:
-    st.subheader("Q2: Energia (Petrolio)")
-    st.metric(label="Crude Oil", value=f"{p_oil:.2f}", delta=f"{v_oil:.2f}%")
-    if v_oil <= -5.0:
-        st.warning("⚠️ Shock Tecnico Rilevato")
+with riga1_col3:
+    st.markdown('<div class="quadrante"><h3>Q3: RESET SISTEMA</h3><p class="ticker">Pulizia Cognitiva</p><p class="ticker">Rimozione Vecchi Schemi</p><div class="news-box">Mantenimento Calma Piatta operativa.</div></div>', unsafe_allow_index=True)
 
-with col3:
-    st.subheader("Q3: Mercato USA (S&P 500)")
-    st.metric(label="S&P 500 Index", value=f"{p_sp500:.2f}", delta=f"{v_sp500:.2f}%")
+# --- RIGA 2 (DETTAGLIO DEI 16 TITOLI INTERNAZIONALI) ---
 
-st.divider()
+with riga2_col1:
+    st.markdown('<div class="quadrante"><h3>Q4: DIFESA & GUERRA</h3>'
+                '<span class="sentiment-label" style="color:#00ff00;">SENTIMENT: RALLY GEOPOLITICO</span>'
+                '<span class="ticker">RHEINMETALL (RHM.DE)</span>'
+                '<span class="ticker">PALANTIR (PLTR)</span>'
+                '<span class="ticker">RTX (RAYTHEON)</span>'
+                '<span class="ticker">NORTHROP GRUMMAN (NOC)</span>'
+                '<span class="ticker">BOEING (BA)</span>'
+                '<span class="ticker">LOCKHEED MARTIN (LMT)</span>'
+                '<div class="news-box">Alert: Budget NATO 2026 in aumento. Titoli Difesa ai massimi storici.</div></div>', unsafe_allow_index=True)
 
-# RIGA CENTRALE (Nucleo Biologico)
-# Questo è il quadrante Q0: Il punto di contatto con la tua intuizione
-col_center = st.columns([1, 2, 1])
-with col_center[1]:
-    st.markdown("<div style='border: 2px solid gold; padding: 20px; border-radius: 10px; text-align: center;'>"
-                "<h3>🎯 Q0: NUCLEO DI VALIDAZIONE BIOLOGICA</h3>"
-                f"<p>Stato Sistema: <b>CALMA PIATTA</b></p>"
-                "</div>", unsafe_allow_html=True)
-    livello_intuizione = st.slider("Sincronizzazione Intuizione (0-10)", 0, 10, 5)
+with riga2_col2:
+    st.markdown('<div class="quadrante"><h3>Q5: TECH & AI CORE</h3>'
+                '<span class="sentiment-label" style="color:#00ff00;">SENTIMENT: HARDWARE DOMINANCE</span>'
+                '<span class="ticker">NVIDIA (NVDA)</span>'
+                '<span class="ticker">AMD</span>'
+                '<span class="ticker">MICROSOFT (MSFT)</span>'
+                '<span class="ticker">IBM</span>'
+                '<span class="ticker">SIEMENS</span>'
+                '<div class="news-box">Focus: Domanda chip AI. Rotazione da software a infrastruttura fisica.</div></div>', unsafe_allow_index=True)
 
-st.divider()
+with riga2_col3:
+    st.markdown('<div class="quadrante"><h3>Q6: FINANZA & INDUSTRY</h3>'
+                '<span class="sentiment-label" style="color:#ff4500;">SENTIMENT: ATTESA BCE / MACRO</span>'
+                '<span class="ticker">UNICREDIT (UCG.MI)</span>'
+                '<span class="ticker">DEUTSCHE BANK (DBK.DE)</span>'
+                '<span class="ticker">STELLANTIS</span>'
+                '<span class="ticker">HEIDELBERG MATERIALS</span>'
+                '<span class="ticker">WISDOMTREE BRENT OIL</span>'
+                '<div class="news-box">Monitoraggio tassi BCE 5 Feb. Focus su stabilità industriale EU.</div></div>', unsafe_allow_index=True)
 
-# RIGA INFERIORE (Monitoraggio Geopolitico e Filtri)
-col4, col5, col6 = st.columns(3)
+# --- FOOTER: ALERT INCIDENTI ANOMALI ---
+st.write("---")
+st.error("⚠️ ALERT INCIDENTI ANOMALI: Volatilità VIX in aumento | Rilevata anomalia su flussi Foreign Exchange Management")
 
-with col4:
-    st.subheader("Q4: Geopolitica")
-    st.info("Focus: Operazioni chirurgiche Iran\nMonitoraggio news Trump")
-
-with col5:
-    st.subheader("Q5: Filtro Rumore")
-    st.success("Operativo: Segnale Pulito\nNessuna interferenza rilevata")
-
-with col6:
-    st.subheader("Q6: La Commercialista")
-    st.write(f"Ultimo aggiornamento: {datetime.datetime.now().strftime('%H:%M:%S')}")
-    st.write("Target stabilità: Validato")
