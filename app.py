@@ -5,8 +5,16 @@ import streamlit as st
 st.set_page_config(page_title="AURORA 7 GOLD - FULL OS", layout="wide")
 
 # STILE CSS PER ARCHITETTURA A 7 QUADRANTI
-st.markdown("""
+  st.markdown("""
     <style>
+    .stApp { background-color: #050505; }
+    .nucleo-q0 { border: 3px solid #ff4b4b; }
+    .quadrante { border: 1px solid #444; }
+    .ticker { color: #ffffff; font-family: monospace; }
+    .news-box { font-size: 0.8em; }
+    .sentiment-label { font-size: 0.7em; }
+    </style>
+    """, unsafe_allow_html=True) <style>
     .stApp { background-color: #050505; color: #d4af37; font-family: 'Inter', sans-serif; }
     .nucleo-q0 { border: 3px solid #ff4500; padding: 25px; text-align: center; border-radius: 15px; margin-bottom: 20px; background: rgba(255, 69, 0, 0.05); }
     .quadrante { border: 1px solid #d4af37; padding: 15px; border-radius: 8px; background: #111; min-height: 350px; margin-bottom: 15px; }
@@ -14,7 +22,7 @@ st.markdown("""
     .news-box { font-size: 0.75em; color: #aaa; margin-top: 10px; border-top: 0.5px solid #444; padding-top: 5px; }
     .sentiment-label { font-size: 0.75em; font-weight: bold; margin-bottom: 10px; display: block; }
     </style>
-    """, unsafe_allow_html=True
+    """, unsafe_allow_html=True)
 
 # --- Q0: NUCLEO DI VALIDAZIONE BIOLOGICA (Sempre al Top) ---
 st.markdown('<div class="nucleo-q0"><h1>🎯 Q0: NUCLEO DI VALIDAZIONE BIOLOGICA</h1><h3>STATO: CALMA PIATTA | SINCRONIZZAZIONE: 5/10</h3></div>', unsafe_allow_index=True)
