@@ -2,67 +2,93 @@
 import streamlit as st
 import yfinance as yf
 
-# Configurazione della pagina
-st.set_page_config(page_title="Aurora 7 Gold", layout="wide")
+# Configurazione della pagina Aurora
+st.set_page_config(page_title="Aurora 7 Gold - Command Center", layout="wide")
 
-# Funzione per recuperare solo i tre valori originali
-def get_market_data():
+# Funzione per il recupero dati in tempo reale (Q1, Q2, Q3)
+def get_aurora_data():
     try:
-        # Oro (GC=F), Petrolio (CL=F), S&P 500 (^GSPC)
-        oro = yf.Ticker("GC=F").fast_info['last_price']
+        # Petrolio (CL=F), Oro (GC=F), S&P 500 (^GSPC)
         petrolio = yf.Ticker("CL=F").fast_info['last_price']
+        oro = yf.Ticker("GC=F").fast_info['last_price']
         sp500 = yf.Ticker("^GSPC").fast_info['last_price']
-        return f"${oro:,.2f}", f"${petrolio:,.2f}", f"{sp500:,.2f}"
+        return f"${petrolio:,.2f}", f"${oro:,.2f}", f"{sp500:,.2f}"
     except:
-        return "Caricamento...", "Caricamento...", "Caricamento..."
+        return "Offline", "Offline", "Offline"
 
-val_oro, val_petrolio, val_sp = get_market_data()
+val_petrolio, val_oro, val_sp = get_aurora_data()
 
-# CSS Originale - Semplice e senza raggruppamenti
+# CSS per l'estetica della Griglia Aurora
 st.markdown("""
     <style>
-    .main { background-color: #0e1117; }
+    .main { background-color: #0e1117; color: #d4af37; }
     .quadrante { 
         border: 2px solid #d4af37; 
-        padding: 20px; 
-        border-radius: 8px; 
-        background: rgba(0,0,0,0.7); 
+        padding: 15px; 
+        border-radius: 10px; 
+        background: rgba(0,0,0,0.8); 
         color: #d4af37;
-        margin-bottom: 15px;
-        text-align: center;
-        min-height: 140px;
+        margin-bottom: 10px;
+        min-height: 200px;
     }
-    .q-title { font-size: 1em; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; }
-    .q-val { font-size: 1.6em; color: white; font-weight: bold; }
-    h1 { color: #d4af37; text-align: center; border-bottom: 2px solid #d4af37; padding-bottom: 10px; }
+    .q-title { font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #d4af37; margin-bottom: 10px; font-size: 0.9em; }
+    .q-val { font-size: 1.8em; color: white; font-weight: bold; margin: 10px 0; }
+    .stTextInput>div>div>input, .stTextArea>div>div>textarea {
+        background-color: #1a1a1a; color: #d4af37; border: 1px solid #d4af37;
+    }
+    h1 { text-align: center; color: #d4af37; border-bottom: 3px solid #d4af37; padding-bottom: 10px; }
+    .status-text { font-size: 0.9em; font-weight: bold; text-align: center; }
     </style>
     """, unsafe_allow_html=True)
 
-st.markdown('<h1>AURORA 7 GOLD - ARCHITETTURA ORIGINALE</h1>', unsafe_allow_html=True)
+st.markdown('<h1>AURORA 7 GOLD - PLANCIA DI COMANDO INTERATTIVA</h1>', unsafe_allow_html=True)
 
-# --- GRIGLIA Q0 -> Q6 ---
+# --- MONITORAGGIO STATO DI VIGILANZA (Sotto il titolo) ---
+st.sidebar.markdown("### STATO DI VIGILANZA")
+vigilanza = st.sidebar.slider("Livello di Vigilanza", 0, 10, 5)
 
-# Prima Riga: I Flussi (Q1, Q0, Q2)
+if vigilanza <= 3:
+    st.sidebar.error(f"Livello {vigilanza}: Stanco e poco vigile")
+elif 4 <= vigilanza <= 6:
+    st.sidebar.warning(f"Livello {vigilanza}: Equilibrato")
+else:
+    st.sidebar.success(f"Livello {vigilanza}: SUPER EQUILIBRATO")
+
+# --- PRIMA RIGA: I PILASTRI (Q1 - Q0 - Q2) ---
 c1, c2, c3 = st.columns(3)
+
 with c1:
-    st.markdown(f'<div class="quadrante"><div class="q-title">Q1 - Petrolio</div><div class="q-val">{val_petrolio}</div>Monitoraggio Flussi</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="quadrante"><div class="q-title">Q1 - Petrolio (Energia)</div><div class="q-val">{val_petrolio}</div>Monitoraggio Flussi</div>', unsafe_allow_html=True)
+
 with c2:
-    st.markdown('<div class="quadrante" style="border: 3px solid #d4af37;"><div class="q-title">Q0 - CENTRO</div><div class="q-val">SOVRANO</div>Nucleo Aurora</div>', unsafe_allow_html=True)
+    st.markdown('<div class="quadrante" style="border: 4px solid #d4af37;"><div class="q-title">Q0 - NUCLEO CENTRALE</div><div class="q-val" style="color:#d4af37;">SOVRANO</div>Origine della Decisione</div>', unsafe_allow_html=True)
+
 with c3:
-    st.markdown(f'<div class="quadrante"><div class="q-title">Q2 - Oro</div><div class="q-val">{val_oro}</div>Valore Intrinseco</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="quadrante"><div class="q-title">Q2 - Oro (Valore)</div><div class="q-val">{val_oro}</div>Asset Reali</div>', unsafe_allow_html=True)
 
-# Seconda Riga: S&P e Percezione (Q3, Q4)
+# --- SECONDA RIGA: ANALISI E INTUIZIONE (Q3 - Q4) ---
 c4, c5 = st.columns(2)
+
 with c4:
-    st.markdown(f'<div class="quadrante"><div class="q-title">Q3 - S&P 500</div><div class="q-val">{val_sp}</div>Mercato Globale</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="quadrante"><div class="q-title">Q3 - S&P 500 (Mondo)</div><div class="q-val">{val_sp}</div>Stato Convergenza</div>', unsafe_allow_html=True)
+
 with c5:
-    st.markdown('<div class="quadrante"><div class="q-title">Q4 - Ionosfera</div>Segnali e Intuizione</div>', unsafe_allow_html=True)
+    st.markdown('<div class="quadrante"><div class="q-title">Q4 - Ionosfera (Segnali)</div>', unsafe_allow_html=True)
+    segnale = st.text_area("Inserisci segnali o intuizioni biologiche:", key="q4_input", height=70)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# Terza Riga: Pulizia e Risultato (Q5, Q6)
+# --- TERZA RIGA: OPERATIVITÀ (Q5 - Q6) ---
 c6, c7 = st.columns(2)
+
 with c6:
-    st.markdown('<div class="quadrante"><div class="q-title">Q5 - Pulizia</div>Rimozione Schemi</div>', unsafe_allow_html=True)
+    st.markdown('<div class="quadrante"><div class="q-title">Q5 - Pulizia (Decostruzione)</div>', unsafe_allow_html=True)
+    st.checkbox("Rimozione schemi obsoleti", key="check_1")
+    st.checkbox("Decostruzione interferenze esterne", key="check_2")
+    st.checkbox("Sincronizzazione Griglia completata", key="check_3")
+    st.markdown('</div>', unsafe_allow_html=True)
+
 with c7:
-    st.markdown('<div class="quadrante"><div class="q-title">Q6 - Output</div>Griglia Attiva</div>', unsafe_allow_html=True)
-
-
+    st.markdown('<div class="quadrante"><div class="q-title">Q6 - Output (Griglia Attiva)</div>', unsafe_allow_html=True)
+    if st.button("GENERA REPORT OUTPUT"):
+        st.write(f"🟢 Vigilanza livello {vigilanza}. Flussi Q1-Q2-Q3 in equilibrio.")
+    st.markdown('Monitoraggio implementazione finale.</div>', unsafe_allow_html=True)
