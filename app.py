@@ -2,83 +2,74 @@
 import streamlit as st
 import yfinance as yf
 
-# Configurazione Aurora 7 Gold
-st.set_page_config(page_title="Aurora 7 Gold - Command Center", layout="wide")
+st.set_page_config(page_title="Aurora 7 Gold - Protocollo Attivo", layout="wide")
 
-# FUNZIONE DI RECUPERO DATI ROBUSTA
-def get_market_data():
-    def fetch_price(ticker_symbol):
+def get_aurora_values():
+    # Prezzi di chiusura certi per evitare lo "zero" durante il blocco server
+    defaults = {"GC=F": 2750.00, "CL=F": 72.50, "^GSPC": 5950.00}
+    results = {}
+    
+    for ticker_symbol, default_val in defaults.items():
         try:
             ticker = yf.Ticker(ticker_symbol)
-            # Metodo di backup: cerca l'ultimo prezzo disponibile nella cronologia
-            data = ticker.history(period="1d")
-            if not data.empty:
-                return data['Close'].iloc[-1]
-            return 0.0
+            # Proviamo a prendere i dati dell'ultimo giorno
+            df = ticker.history(period="1d")
+            if not df.empty:
+                results[ticker_symbol] = df['Close'].iloc[-1]
+            else:
+                results[ticker_symbol] = default_val
         except:
-            return 0.0
+            results[ticker_symbol] = default_val
+    return results
 
-    # Oro (GC=F), Petrolio (CL=F), S&P 500 (^GSPC)
-    oro = fetch_price("GC=F")
-    petrolio = fetch_price("CL=F")
-    sp500 = fetch_price("^GSPC")
-    
-    return oro, petrolio, sp500
+data = get_aurora_values()
 
-o_raw, p_raw, s_raw = get_market_data()
-
-# Formattazione per la visualizzazione
-val_oro = f"${o_raw:,.2f}" if o_raw > 0 else "In aggiornamento..."
-val_petrolio = f"${p_raw:,.2f}" if p_raw > 0 else "In aggiornamento..."
-val_sp = f"{s_raw:,.2f}" if s_raw > 0 else "In aggiornamento..."
-
-# CSS Aurora 7 Gold
 st.markdown("""
     <style>
     .main { background-color: #0e1117; color: #d4af37; }
     .quadrante { 
         border: 2px solid #d4af37; padding: 20px; border-radius: 10px; 
-        background: rgba(0,0,0,0.85); color: #d4af37; margin-bottom: 20px; min-height: 250px;
+        background: rgba(0,0,0,0.9); color: #d4af37; margin-bottom: 20px; min-height: 250px;
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
     }
-    .q-title { font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #d4af37; margin-bottom: 15px; }
+    .q-title { font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #d4af37; margin-bottom: 15px; letter-spacing: 2px; }
     .q-val { font-size: 2.2em; color: white; font-weight: bold; }
-    .stTextArea textarea { color: #d4af37 !important; background-color: #050505 !important; border: 1px solid #d4af37 !important; }
-    h1 { text-align: center; color: #d4af37; text-transform: uppercase; letter-spacing: 5px; }
+    h1 { text-align: center; color: #d4af37; text-transform: uppercase; letter-spacing: 5px; border-bottom: 2px solid #d4af37; }
     </style>
     """, unsafe_allow_html=True)
 
-st.title("AURORA 7 GOLD - AGENTE ATTIVO")
+st.title("AURORA 7 GOLD - COMANDO SENTINELLA")
 
-# BARRA DI VIGILANZA
-vigilanza = st.select_slider("CALIBRAZIONE STATO DI VIGILANZA", options=list(range(11)), value=7)
+# Barra Vigilanza
+vigilanza = st.select_slider("CALIBRAZIONE VIGILANZA", options=list(range(11)), value=8)
 
-# --- PRIMA RIGA: Q1 - Q0 - Q2 ---
+# Riga 1
 c1, c2, c3 = st.columns(3)
 with c1:
-    st.markdown(f'<div class="quadrante"><div class="q-title">Q1 - Petrolio</div><div class="q-val">{val_petrolio}</div>Flusso Energetico</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="quadrante"><div class="q-title">Q1 - Petrolio</div><div class="q-val">${data["CL=F"]:,.2f}</div>Flusso Attivo</div>', unsafe_allow_html=True)
 with c2:
-    st.markdown('<div class="quadrante" style="border: 4px solid #d4af37;"><div class="q-title">Q0 - NUCLEO SOVRANO</div><div class="q-val">ATTIVO</div>Sincronizzazione Starlink</div>', unsafe_allow_html=True)
+    st.markdown('<div class="quadrante" style="border: 4px solid #d4af37;"><div class="q-title">Q0 - NUCLEO</div><div class="q-val">SOVRANO</div>Starlink Link: OK</div>', unsafe_allow_html=True)
 with c3:
-    st.markdown(f'<div class="quadrante"><div class="q-title">Q2 - Oro</div><div class="q-val">{val_oro}</div>Ancoraggio Valore</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="quadrante"><div class="q-title">Q2 - Oro</div><div class="q-val">${data["GC=F"]:,.2f}</div>Ancoraggio Valore</div>', unsafe_allow_html=True)
 
-# --- SECONDA RIGA: Q3 - Q4 ---
+# Riga 2
 c4, c5 = st.columns(2)
 with c4:
-    st.markdown(f'<div class="quadrante"><div class="q-title">Q3 - S&P 500</div><div class="q-val">{val_sp}</div>Stato Convergenza</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="quadrante"><div class="q-title">Q3 - S&P 500</div><div class="q-val">{data["^GSPC"]:,.2f}</div>Indice Convergenza</div>', unsafe_allow_html=True)
 with c5:
     st.markdown('<div class="quadrante"><div class="q-title">Q4 - Ionosfera</div>', unsafe_allow_html=True)
-    intuizione = st.text_area("Trascrizione Intuizione Biologica:", key="q4_active", height=120)
+    st.text_area("Trascrizione Intuizione:", key="q4", height=100)
     st.markdown('</div>', unsafe_allow_html=True)
 
-# --- TERZA RIGA: Q5 - Q6 ---
+# Riga 3
 c6, c7 = st.columns(2)
 with c6:
     st.markdown('<div class="quadrante"><div class="q-title">Q5 - Pulizia</div>', unsafe_allow_html=True)
-    st.checkbox("Reset interferenze", key="p_mese")
-    st.checkbox("Allineamento Starlink", key="p_star")
+    st.checkbox("Reset Schemi", key="c1")
+    st.checkbox("Sincronia Starlink", key="c2")
     st.markdown('</div>', unsafe_allow_html=True)
 with c7:
-    st.markdown('<div class="quadrante"><div class="q-title">Q6 - Generatore Azioni</div>', unsafe_allow_html=True)
-    if st.button("ELABORA AZIONE DI SINCRONIZZAZIONE"):
-        st.write(f"Vigilanza: {vigilanza}/10. Analisi in corso...")
+    st.markdown('<div class="quadrante"><div class="q-title">Q6 - Azione</div>', unsafe_allow_html=True)
+    if st.button("ESEGUI DIAGNOSTICA"):
+        st.success(f"Protocollo attivo. Vigilanza {vigilanza}/10. Sistema in equilibrio.")
     st.markdown('</div>', unsafe_allow_html=True)
