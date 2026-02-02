@@ -77,17 +77,9 @@ with c7:
 
 # Riga 4 - Tecnologia Aurora c8, c9 = st.columns(2) with c8:
 
-class="quadrante"><div class="q-title">Q7 Palantir</div><div
+with c8:
+    st.markdown(f'<div class="quadrante"><div class="q-title">Q7 Palantir</div><div class="q-val">${data["PLTR"]:.2f}</div>', unsafe_allow_html=True)
 
-class="q-val">$
-
-{data["PLTR"]:.2f}</div>',
-
-unsafe_allow_html=True)
-
-with c9:
-
-st.markdown(f'<div class="quadrante"><div class="q-title">Q8 - Microsoft</div><div class="q-val">$ {data["MSFT"]:.2f}</div>', unsafe_allow_html=True)
 
 
 
