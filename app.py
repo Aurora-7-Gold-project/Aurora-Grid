@@ -6,7 +6,7 @@ st.set_page_config(page_title="Aurora 7 Gold - Protocollo Attivo", layout="wide"
 
 def get_aurora_values():
     # Prezzi di chiusura certi per evitare lo "zero" durante il blocco server
-    defaults = {"GC=F": 2750.00, "CL=F": 72.50, "^GSPC": 5950.00,  "PLTR": 36.00,  # Frequenza Tesla 3   "MSFT": 420.00 # Frequenza Tesla 4 }
+    defaults = {"GC=F": 2750.00, "CL=F": 72.50, "^GSPC": 5950.00,  "PLTR": 36.00,   "MSFT": 420.00
     results = {}
     
     for ticker_symbol, default_val in defaults.items():
@@ -69,10 +69,10 @@ with c6:
     st.checkbox("Sincronia Starlink", key="c2")
     st.markdown('</div>', unsafe_allow_html=True)
 with c7:
-    st.markdown('<div class="quadrante"><div class="q-title">Q6 - Azione</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="quadrante"><div class="q-title">Q6 - Azione</div>', unsafe_allow_html=True)
     if st.button("ESEGUI DIAGNOSTICA"):
         st.success(f"Protocollo attivo. Vigilanza {vigilanza}/10. Sistema in equilibrio.")
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown(f'</div>', unsafe_allow_html=True)
 
 
 # Riga 4 - Tecnologia Aurora c8, c9 = st.columns(2) with c8:
