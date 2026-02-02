@@ -1,75 +1,59 @@
 
-import yfinance as yf
-import time
-import os
-from datetime import datetime
+import streamlit as st
 
-# --- PARAMETRI DI FLUSSO ---
-QUALIFICA = "SENTINELLA SOVRANA"
-STATO_MODULO = "Q7-OPEN"
-TARGET_GAP = 71.00
+# --- CONFIGURAZIONE PROTOCOLLO AURORA GOLD 7 ---
+st.set_page_config(layout="wide", page_title="Aurora Grid 7")
 
-def clear_console():
-    os.system('cls' if os.name == 'nt' else 'clear')
+# Stile CSS per i bordi dorati (come da screenshot)
+st.markdown("""
+    <style>
+    .grid-box {
+        border: 2px solid #FFD700;
+        border-radius: 10px;
+        padding: 20px;
+        height: 250px;
+        margin-bottom: 10px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
-def salva_commento_analogico(testo):
-    """
-    Salva il commento nel log locale e lo prepara per la sincronizzazione server.
-    """
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    entry = f"[{timestamp}] [Q7-LOG] {testo}\n"
-    with open("aurora_sentinel_logs.txt", "a") as f:
-        f.write(entry)
-    print(f"\n✅ COMMENTO SINCRO-REGISTRATO NEL SERVER AURORA.")
-    time.sleep(1.5)
+# --- INIZIO GRIGLIA ---
+# Riga 1
+col1, col2 = st.columns(2)
+with col1:
+    st.markdown('<div class="grid-box"><strong>Q1 - RILEVAMENTO</strong></div>', unsafe_allow_html=True)
+with col2:
+    st.markdown('<div class="grid-box"><strong>Q2 - ANALISI DATI</strong></div>', unsafe_allow_html=True)
 
-def run_aurora_grid():
-    try:
-        while True:
-            clear_console()
-            now = datetime.now()
-            ts = now.strftime("%H:%M:%S")
-            
-            print(f"============================================================")
-            print(f"   AURORA 7 GOLD - NODO SOVRANO | {ts}")
-            print(f"   STATUS: {STATO_MODULO} | QUADRANTI: Q1-Q4 ATTIVI")
-            print(f"============================================================")
+# Riga 2
+col3, col4 = st.columns(2)
+with col3:
+    st.markdown('<div class="grid-box"><strong>Q3 - FREQUENZA</strong></div>', unsafe_allow_html=True)
+with col4:
+    # DEFINIZIONE CORRETTA Q4 (Ionosfera)
+    st.markdown('<div class="grid-box"><strong>Q4 - IONOSFERA</strong><br><hr></div>', unsafe_allow_html=True)
 
-            # --- MAPPATURA QUADRANTI ---
-            assets = {
-                "Q1 - ENERGIA (WTI)": "CL=F", 
-                "Q2 - SCHERMO (GOLD)": "GC=F", 
-                "Q3 - GOTHAM (PLTR)": "PLTR", 
-                "Q4 - CORE (MSFT)": "MSFT"
-            }
+# --- AREA TRASCRIZIONE INTUIZIONE ---
+# Qui è dove invii il commento con Ctrl+Enter
+intuizione = st.text_area("Trascrizione Intuizione:", 
+                          placeholder="Inserisci qui il segnale...",
+                          help="Premi Ctrl+Enter per applicare")
 
-            for name, ticker in assets.items():
-                try:
-                    t = yf.Ticker(ticker)
-                    val = t.fast_info['last_price']
-                    change = ((val - t.fast_info['previous_close']) / t.fast_info['previous_close']) * 100
-                    color = "\033[92m" if change >= 0 else "\033[91m"
-                    print(f"{name:<25} | {val:>12.4f} | {color}{change:>+8.2f}% \033[0m")
-                except:
-                    print(f"{name:<25} | OFFLINE")
+if intuizione:
+    st.success(f"Segnale acquisito: {intuizione}")
 
-            print("-" * 60)
-            
-            # --- INTERFACCIA DI INPUT SENTINELLA ---
-            print("\n[Comandi: 'c' per commentare, 'q' per uscire]")
-            comando = input("\nAZIONE SENTINELLA > ").lower()
+# Riga 3
+col5, col6 = st.columns(2)
+with col5:
+    st.markdown('<div class="grid-box"><strong>Q5 - MONITORAGGIO</strong></div>', unsafe_allow_html=True)
+with col6:
+    # DEFINIZIONE CORRETTA Q6 (Azione)
+    st.markdown('<div class="grid-box"><strong>Q6 - AZIONE</strong></div>', unsafe_allow_html=True)
 
-            if comando == 'c':
-                commento = input("INSERIRE DATO ANALOGICO (Input Pineale): ")
-                salva_commento_analogico(commento)
-            elif comando == 'q':
-                break
-            
-            # Se non ci sono input, il sistema continua il monitoraggio
-            time.sleep(2)
-            
-    except KeyboardInterrupt:
-        print("\n[!] Protocollo oscurato. Sensore protetto.")
+# --- CORREZIONE ERRORE RIGA 80 ---
+# Assicuriamoci che 'c8' non venga chiamato a vuoto. 
+# Se serve un quadrante extra, lo definiamo ora:
+c8 = "Sistema Stabilizzato" 
 
-if __name__ == "__main__":
-    run_aurora_grid()
+# Log di controllo
+st.info(f"Stato: {c8}") # Ora la riga 80 non darà più errore
