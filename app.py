@@ -6,7 +6,7 @@ st.set_page_config(page_title="Aurora 7 Gold - Protocollo Attivo", layout="wide"
 
 def get_aurora_values():
     # Prezzi di chiusura certi per evitare lo "zero" durante il blocco server
-    defaults = {"GC=F": 2750.00, "CL=F": 72.50, "^GSPC": 5950.00,  "PLTR": 36.00,   "MSFT": 420.00
+    defaults = {"GC=F": 2750.00, "CL=F": 72.50, "^GSPC": 5950.00,  "PLTR": 36.00,   "MSFT": 420.00}
     results = {}
     
     for ticker_symbol, default_val in defaults.items():
